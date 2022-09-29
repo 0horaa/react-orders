@@ -1,0 +1,17 @@
+header {
+    width: 100%;
+}
+
+nav ul {
+    display: flex;
+    gap: 1.2rem;
+    background: #333;
+    padding: 2rem;
+    list-style: none;
+}
+
+nav ul li .link {
+    color: #f8f8f8;
+    text-decoration: none;
+    font-size: 1.2rem;
+}
