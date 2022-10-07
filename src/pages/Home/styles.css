@@ -1,15 +1,22 @@
-.table-container {
-    margin-top: 2rem;
+.edit-button {
+    color: #f8f8f8;
+    background-color: #ffc107;
 }
 
-.table-container table {
-    border: 1px solid #333;
-    width: 100%;
-    border-spacing: 0;
+.check-button {
+    color: #f8f8f8;
+    background-color: #28a745;
 }
 
-.table-container table tbody td,
-.table-container table thead th {
-    border: 1px solid #333;
-    padding: 1rem;
+.edit-button i,
+.check-button i {
+    font-size: 1.2rem;
+    display: flex;
+}
+
+.edit-button:hover,
+.edit-button:focus,
+.check-button:hover,
+.check-button:focus {
+    filter: brightness(90%);
 }

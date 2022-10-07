@@ -1,10 +1,9 @@
 import { FormEvent, useState } from "react";
 import Swal from "sweetalert2";
 
+import { PageControl } from "../../components/PageControl";
+import { OrderForm } from "../../components/OrderForm";
 import { api } from "../../services/api";
-import { Button } from "../../components/Button";
-
-import "./styles.css";
 
 export function Register() {
     const [description, setDescription] = useState("");
@@ -44,48 +43,17 @@ export function Register() {
 
     return (
         <main>
-            <section className="page-control">
-                <h2>Cadastro de pedidos</h2>
-            </section>
+            <PageControl title="Cadastro de pedidos" />
 
-            <form className="register-orders-form" onSubmit={handleRegisterOrder}>
-                <div className="form-control">
-                    <label htmlFor="description">Descrição</label>
-                    <input
-                        type="text"
-                        id="description"
-                        placeholder="Descreva o pedido"
-                        onChange={(event) => setDescription(event.target.value)}
-                        value={description}
-                    />
-                </div>
-
-                <div className="form-control">
-                    <label htmlFor="price">Preço</label>
-                    <input
-                        type="text"
-                        id="price"
-                        placeholder="Insira o preço total do pedido"
-                        onChange={(event) => setPrice(event.target.value)}
-                        value={price}
-                    />
-                </div>
-
-                <div className="form-control">
-                    <label htmlFor="details">Observações (opcional)</label>
-                    <input
-                        type="text"
-                        id="details"
-                        placeholder="Observações sobre o pedido"
-                        onChange={(event) => setDetails(event.target.value)}
-                        value={details}
-                    />
-                </div>
-
-                <div className="form-confirm">
-                    <Button type="submit">Cadastrar</Button>
-                </div>
-            </form>
+            <OrderForm
+                onSubmit={handleRegisterOrder}
+                description={description}
+                setDescription={setDescription}
+                price={price}
+                setPrice={setPrice}
+                details={details}
+                setDetails={setDetails}
+            />
         </main>
-    )
+    );
 }
