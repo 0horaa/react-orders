@@ -1,53 +1,52 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { FaEdit, FaCheck } from "react-icons/fa";
 import Swal from "sweetalert2";
 
+import { useOrders } from "../../hooks/useOrders";
+import { PageControl } from "../../components/PageControl";
 import { Button } from "../../components/Button";
 import { api } from "../../services/api";
 
+import { Order } from "../../@types/order";
 import "./styles.css";
-
-type Order = {
-    id: number;
-    description: string;
-    price: string;
-    details: string;
-    status: number;
-}
 
 export function Home() {
     const navigate = useNavigate();
-    const [orders, setOrders] = useState<Order[]>([]);
+    const { orders, fetchOrders } = useOrders();
 
     function handleNavigateToRegister() {
         navigate("/cadastrar-pedidos");
     }
 
-    useEffect(() => {
-        async function fetchOrders() {
-            try {
-                const response = await api.get("/orders");
-                setOrders(response.data);
-            } catch (error) {
-                console.error(error);
-                
-                Swal.fire({
-                    icon: "error",
-                    title: "Algo deu errado",
-                    text: "Não foi possível buscar os pedidos"
-                });
-            }
-        }
+    async function handleChangeStatusOrder(order: Order) {
+        order.status = 1;
 
-        fetchOrders();
-    }, []);
+        try {
+            await api.put(`/orders/${order.id}`, order);
+
+            Swal.fire({
+                icon: "success",
+                title: "Tudo certo!",
+                text: "Pedido entregue com sucesso!"
+            });
+
+            fetchOrders();
+        } catch (error) {
+            console.error(error);
+
+            Swal.fire({
+                icon: "error",
+                title: "Algo deu errado",
+                text: "Não foi possível mudar o status do pedido"
+            });
+        }
+    }
 
     return (
         <main>
-            <section className="page-control">
-                <h2>Pedidos pendentes</h2>
+            <PageControl title="Pedidos pendentes">
                 <Button onClick={handleNavigateToRegister}>Cadastrar pedidos</Button>
-            </section>
+            </PageControl>
 
             <section className="table-container">
                 <table>
@@ -56,16 +55,35 @@ export function Home() {
                             <th>DESCRIÇÃO</th>
                             <th>PREÇO</th>
                             <th>OBSERVAÇÕES</th>
+                            <th>AÇÕES</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        {orders.map((order) => {
+                        {orders.filter((order) => order.status === 0).map((order) => {
+                            const id = order.id;
+
                             return (
-                                <tr key={order.id}>
+                                <tr key={id}>
                                     <td>{order.description}</td>
                                     <td>{order.price}</td>
                                     <td>{order.details}</td>
+                                    <td className="actions">
+                                        <Link to={`/editar-pedido/${id}`} className="actions-button edit-button">
+                                            <i>
+                                                <FaEdit />
+                                            </i>
+                                        </Link>
+                                        <button
+                                            type="button"
+                                            className="actions-button check-button"
+                                            onClick={() => handleChangeStatusOrder(order)}
+                                        >
+                                            <i>
+                                                <FaCheck />
+                                            </i>
+                                        </button>
+                                    </td>
                                 </tr>
                             );
                         })}
